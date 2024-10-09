@@ -158,7 +158,7 @@ function catchBall() {
         document.querySelector("#score").innerHTML = ++score;
         remainingBalls--;
         if (remainingBalls <= 0)
-            setTimeout(() => win());
+            setTimeout(() => win(), 100);
     }
 }
 
