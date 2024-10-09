@@ -1,0 +1,89 @@
+:root {
+    --primary-color: blueviolet;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    padding: 3vh;
+}
+
+caption {
+    font-family: cursive;
+    font-size: 3vh;
+    font-weight: 700;
+    padding-bottom: 4vh;
+}
+
+table {
+    border-collapse: collapse;
+    border: 3px solid black;
+}
+
+td {
+    /* border: 1px solid black; */
+    padding: 1vw;
+    background-color: darkgray;
+}
+
+/* the first and last ceil in every row  */
+table tr td:first-child,
+table tr td:last-child,
+/* the first and last ceil in every column  */
+table tr:nth-child(2) td,
+table tr:nth-last-child(1) td {
+    background-color: var(--primary-color);
+}
+
+#player,
+.ball {
+    max-width: 2vw;
+}
+
+p {
+    font-size: 4vh;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: 600;
+}
+
+#score-img {
+    max-height: 7vh;
+}
+
+#score-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-height: 6vh;
+}
+
+#start-and-restart-btn {
+    height: 5vh;
+    width: 10vw;
+    background-color: white;
+    border: 3px dashed black;
+    border-radius: 20px;
+    font-size: 2vh;
+    font-weight: 700;
+    margin-left: 4vw;
+    color: var(--primary-color);
+}
+
+#start-and-restart-btn:hover {
+    background-color: rgb(224, 230, 230);
+}
+
+.iconify {
+    color: var(--primary-color);
+    font-size: 5vh;
+    left: 0;
+    cursor: pointer;
+}
+
+#header-operators {
+    display: flex;
+    justify-content: space-between;
+    gap: 4vw;
+    left: 5vw;
+    position: absolute;
+}
