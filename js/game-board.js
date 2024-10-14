@@ -65,7 +65,7 @@ function startGame() {
     playerPositionJ = Math.round(Math.random() * (cols - 3) + 1);
 
     let player = document.createElement("img");
-    player.src = '../assets/images/player.png';
+    player.src = 'assets/images/player.png';
     player.alt = "player";
     player.id = "player";
 
@@ -92,7 +92,7 @@ function addBall() {
     let foundPosition = false, ballPositionI, ballPositionJ, cell;
 
     let ball = document.createElement("img");
-    ball.src = "/assets/images/ball.png";
+    ball.src = "assets/images/ball.png";
     ball.alt = "ball";
     ball.className = "ball";
 
