@@ -1,10 +1,12 @@
-let playerPositionI, playerPositionJ, cols, rows, score, remainingBalls, intervalId, forbiddenCells = [];
+let playerPositionI, playerPositionJ, cols, rows, score = 0, remainingBalls, intervalId, forbiddenCells = [], isCurrentMoveThroughGap = false;
 
 
 function createTable(colNum, rowNum) {
     cols = colNum;
     rows = rowNum;
+
     let row, cell;
+
     const table = document.querySelector("table");
 
     for (let i = 0; i < rows; i++) {
@@ -29,18 +31,24 @@ function createTable(colNum, rowNum) {
     let gapCells = [[0, Math.floor(cols / 2)], [rows - 1, Math.floor(cols / 2)], [Math.floor(rows / 2), 0], [Math.floor(rows / 2), cols - 1]];
 
     gapCells.forEach(element => {
-        (getCell(...element)).style.backgroundColor = "darkgray";
+        let cell = (getCell(...element));
+        cell.style.backgroundColor = "darkgray";
     });
 
     forbiddenCells = forbiddenCells.filter(item =>
         !gapCells.some(gap => gap[0] === item[0] && gap[1] === item[1])
     );
-}
 
+    let startIcn = document.querySelector('#start-icn');
+    startIcn.addEventListener('click', startGame);
+}
 
 
 function getCell(i, j) {
     const table = document.querySelector('table');
+    if (!table)
+        console.log("not table");
+
     const row = table.rows[i];
     return row.cells[j];
 }
@@ -49,16 +57,15 @@ function getCell(i, j) {
 function startGame() {
     remainingBalls = 0;
     score = 0;
-    let startBtn = document.querySelector("#start-and-restart-btn");
-    startBtn.textContent = "RESTART 🔄";
-    startBtn.removeEventListener("click", startGame);
-    startBtn.addEventListener("click", restartGame);
+
+    let startIcn = document.querySelector('#start-icn');
+    startIcn.removeEventListener('click', startGame);
 
     playerPositionI = Math.round(Math.random() * (rows - 3) + 1);
     playerPositionJ = Math.round(Math.random() * (cols - 3) + 1);
 
     let player = document.createElement("img");
-    player.src = "assets/images/player.png";
+    player.src = '../assets/images/player.png';
     player.alt = "player";
     player.id = "player";
 
@@ -71,20 +78,23 @@ function startGame() {
     intervalId = setInterval(() => addBall(cols, rows), 3000);
 }
 
+
 function restartGame() {
+    score = 0;
+    document.querySelector("#score").innerHTML = score;
     clearInterval(intervalId);
     cleanBoard();
     startGame();
 }
 
+
 function addBall() {
     let foundPosition = false, ballPositionI, ballPositionJ, cell;
 
     let ball = document.createElement("img");
-    ball.src = "assets/images/ball.png";
+    ball.src = "/assets/images/ball.png";
     ball.alt = "ball";
     ball.className = "ball";
-
 
     while (!foundPosition) {
         ballPositionI = Math.round(Math.random() * (rows - 3) + 1);
@@ -110,32 +120,40 @@ document.addEventListener("keydown",
                 if (!forbiddenCells.some(cell => cell[0] === playerPositionI - 1 && cell[1] === playerPositionJ))
                     if (playerPositionI - 1 >= 0)
                         playerPositionI--;
-                    else
+                    else {
                         playerPositionI = rows - 1;
+                        isCurrentMoveThroughGap = true;
+                    }
                 break;
 
             case "ArrowDown":
                 if (!forbiddenCells.some(cell => cell[0] === playerPositionI + 1 && cell[1] === playerPositionJ))
                     if (playerPositionI + 1 <= rows - 1)
                         playerPositionI++;
-                    else
+                    else {
                         playerPositionI = 0;
+                        isCurrentMoveThroughGap = true;
+                    }
                 break;
 
             case "ArrowLeft":
                 if (!forbiddenCells.some(cell => cell[0] === playerPositionI && cell[1] === playerPositionJ - 1))
                     if (playerPositionJ - 1 >= 0)
                         playerPositionJ--;
-                    else
+                    else {
                         playerPositionJ = cols - 1;
+                        isCurrentMoveThroughGap = true;
+                    }
                 break;
 
             case "ArrowRight":
                 if (!forbiddenCells.some(cell => cell[0] === playerPositionI && cell[1] === playerPositionJ + 1))
                     if (playerPositionJ + 1 <= cols - 1)
                         playerPositionJ++;
-                    else
+                    else {
                         playerPositionJ = 0;
+                        isCurrentMoveThroughGap = true;
+                    }
                 break;
         }
 
@@ -144,12 +162,16 @@ document.addEventListener("keydown",
             player.remove();
 
         let currCell = getCell(playerPositionI, playerPositionJ);
-        currCell.style.padding = "0";
+        if (!isCurrentMoveThroughGap)
+            currCell.style.padding = "0";
+        else
+            isCurrentMoveThroughGap = false;
         currCell.appendChild(player);
 
         catchBall();
     }
 )
+
 
 function catchBall() {
     let currCell = getCell(playerPositionI, playerPositionJ);
@@ -162,6 +184,7 @@ function catchBall() {
     }
 }
 
+
 function cleanBoard() {
     let images = document.querySelectorAll("table img");
     images.forEach(image => {
@@ -170,21 +193,29 @@ function cleanBoard() {
     remainingBalls = 0;
 }
 
+
 function handlePauseAndContinue() {
     clearInterval(intervalId);
-    let icn = document.querySelector(".iconify");
-    if (icn.ariaLabel === "pause game") {
+    let icn = document.querySelector("#pause-continue .iconify");
+    if (icn.ariaLabel == "pause game") {
+        document.querySelector("#pause-continue").title = "continue";
         clearInterval(intervalId);
-        icn.iconData = "fa:play";
-        icn.setAttribute("ariaLabel", "continue game");
+        document.querySelector('#overlay').style.display = 'block';
+        icn.setAttribute("data-icon", "fa:play");
+        icn.setAttribute("aria-label", "continue game");
+        icn.setAttribute("title", "continue");
     }
 
     else {
+        document.querySelector("#pause-continue").title = "pause";
         intervalId = setInterval(() => addBall(cols, rows), 3000);
-        icn.setAttribute("iconData", "subway:pause");
-        icn.setAttribute("ariaLabel", "pause game");
+        document.querySelector('#overlay').style.display = 'none';
+        icn.setAttribute("data-icon", "subway:pause");
+        icn.setAttribute("aria-label", "pause game");
+        icn.setAttribute("title", "pause");
     }
 }
+
 
 function gameOver() {
     clearInterval(intervalId);
@@ -202,6 +233,7 @@ function gameOver() {
         }
     })
 }
+
 
 function win() {
     clearInterval(intervalId);

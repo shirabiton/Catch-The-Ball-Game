@@ -8,6 +8,19 @@ body {
     padding: 3vh;
 }
 
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    display: none;
+    /* will not prevent events on body elements */
+    pointer-events: none;
+}
+
 caption {
     font-family: cursive;
     font-size: 3vh;
@@ -21,7 +34,6 @@ table {
 }
 
 td {
-    /* border: 1px solid black; */
     padding: 1vw;
     background-color: darkgray;
 }
@@ -55,22 +67,19 @@ p {
     align-items: center;
     justify-content: space-between;
     max-height: 6vh;
+    gap: 1vw;
+    left: 5vw;
+    position: absolute;
 }
 
-#start-and-restart-btn {
-    height: 5vh;
-    width: 10vw;
-    background-color: white;
-    border: 3px dashed black;
-    border-radius: 20px;
-    font-size: 2vh;
-    font-weight: 700;
-    margin-left: 4vw;
-    color: var(--primary-color);
-}
-
-#start-and-restart-btn:hover {
-    background-color: rgb(224, 230, 230);
+#header-operators {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-height: 6vh;
+    gap: 4vw;
+    right: 8vw;
+    position: absolute;
 }
 
 .iconify {
@@ -78,12 +87,4 @@ p {
     font-size: 5vh;
     left: 0;
     cursor: pointer;
-}
-
-#header-operators {
-    display: flex;
-    justify-content: space-between;
-    gap: 4vw;
-    left: 5vw;
-    position: absolute;
 }
